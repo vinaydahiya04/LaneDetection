@@ -18,13 +18,7 @@ def do_canny(frame):
     canny = cv.Canny(blur,50,150)
     return canny
 
-one = cv.imread(r"india.jpg")
-one = cv.cvtColor(one,cv.COLOR_BGR2RGB)
-plt.imshow(one)
 
-two = do_canny(one)
-plt.imshow(two)
-plt.savefig("Cannysample.jpg",dpi=200)
 
 def do_segment(frame):
     
@@ -43,11 +37,7 @@ def do_segment(frame):
     
     return segment
 
-plt.imshow(one)
-plt.title("Original Image",fontsize =18)
 
-plt.imshow(do_segment(do_canny(one)))
-plt.savefig("Cannysegment.jpg",dpi=200)
 
 
 def calculate_lines(frame,lines):
