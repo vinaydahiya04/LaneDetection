@@ -21,7 +21,7 @@ The following libraries were used for this project:
 * Matplotlib
 
 ## Throughput
-The model computed lanes for 100 images of average esolution 351*532 in 1.498 s on a standard CPU based computer. Giving a throughput of 67.11 img/sec.
+The model computed lanes for 100 images of average resolution (351*532) in 1.498 s on a standard CPU environment. Giving a throughput of 67.11 img/sec.
 
 
 ## To Run the program clone this repository and use the command "python lane.py"
