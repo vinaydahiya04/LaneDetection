@@ -7,15 +7,11 @@ import pandas as pd
 import os,sys,warnings
 warnings.filterwarnings('ignore')
 
-import cv2 as cv
-import numpy as np
-# import matplotlib.pyplot as plt
-
 def do_canny(frame):
     
     gray = cv.cvtColor(frame, cv.COLOR_RGB2GRAY)    
     blur = cv.GaussianBlur(gray, (13, 13), 0)    
-    canny = cv.Canny(blur,50,150)
+    canny = cv.Canny(blur,50,100)
     return canny
 
 
@@ -26,7 +22,7 @@ def do_segment(frame):
     width = frame.shape[1]
     
     poly = np.array([
-        [(0,height),(width,height),(int(frame.shape[1]/2),int(frame.shape[0]/3))] 
+        [(0,height),(width,height),(int(frame.shape[1]/2),int(frame.shape[0]/2))] 
     ])
     
     mask = np.zeros_like(frame)
@@ -44,6 +40,7 @@ def calculate_lines(frame,lines):
     # Empty arrays to store the co-ordinates of left and right lines
     left = []
     right = []
+    
     if(lines is None):
         return (np.array([0,0,0,0]),np.array([0,0,0,0]))
     for line in lines:
@@ -53,16 +50,20 @@ def calculate_lines(frame,lines):
         # and returns a vector of coefficients which describe 
         # the slope and the intercept.
         parameters = np.polyfit((x1,x2),(y1,y2),1)
+        
         slope = parameters[0]
         y_intercept = parameters[1]
          # If slope is negative, the line is to the left of the lane, and otherwise, the line is to the right of the lane
-        if slope < 0:
+        if slope <= 0:
             left.append((slope, y_intercept))
         else:
+            
             right.append((slope, y_intercept))
     # Averages out all the values for left and right into a single slope and y-intercept value for each line
     left_avg = np.average(left, axis = 0)
+    
     right_avg = np.average(right, axis = 0)
+    
     # Calculates the x1, y1, x2, y2 coordinates for the left and right lines
     if(left_avg!=[]):
         left_line = calculate_coordinates(frame, left_avg)
@@ -140,11 +141,15 @@ while (cap.isOpened()):
     # making the segment constrained so that detection is
     # confined.
     segment = do_segment(canny)
+
     hough = cv.HoughLinesP(segment, 2, np.pi / 180, 100, np.array([]), minLineLength = 80, maxLineGap = 50)
+    print(hough)
     # cv.imshow("Segmented canny",segment)
     # frames read at 10 Millsecond intervals.
     # Averages multiple detected lines from hough into one line for left border of lane and one line for right border of lane
     lines = calculate_lines(frame, hough)
+    print(lines)
+    
     # Visualizes the lines
     lines_visualize = visualize_lines(frame, lines)
     #cv.imshow("hough", lines_visualize)
