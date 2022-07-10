@@ -142,16 +142,17 @@ while (cap.isOpened()):
     # confined.
     segment = do_segment(canny)
 
-    hough = cv.HoughLinesP(segment, 2, np.pi / 180, 100, np.array([]), minLineLength = 80, maxLineGap = 50)
+    hough = cv.HoughLinesP(segment, 2, np.pi / 180, 100, np.array([]), minLineLength = 50, maxLineGap = 100)
     print(hough)
     # cv.imshow("Segmented canny",segment)
     # frames read at 10 Millsecond intervals.
     # Averages multiple detected lines from hough into one line for left border of lane and one line for right border of lane
     lines = calculate_lines(frame, hough)
-    print(lines)
+    
     
     # Visualizes the lines
     lines_visualize = visualize_lines(frame, lines)
+    print(lines_visualize)
     #cv.imshow("hough", lines_visualize)
     # Overlays lines on frame by taking their weighted sums and adding an arbitrary scalar value of 1 as the gamma argument
     output = cv.addWeighted(frame, 0.9, lines_visualize, 1, 1)
